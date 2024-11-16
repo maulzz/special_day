@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Day For U</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../src/css/output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function(){
+           emailjs.init({
+             publicKey: "Auuqi-XbW1Z8I3ZYU",
+           });
+        })();
+     </script>
+    <style>
+        @keyframes fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .confetti {
+            position: absolute;
+            animation: fall linear forwards;
+        }
+    </style>
+</head>
+<body x-data="{tidak:false, mau:true}" class="h-screen w-full overflow-hidden bg-def font-body relative flex items-center justify-center">
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50 hidden">
+        <div class="flex flex-col items-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-defsec"></div>
+            <p class="mt-4 text-white text-lg">Mengirim pesan...</p>
+        </div>
+    </div>
+
+
+    <div x-show="mau" class="flex justify-center items-center h-full">
+        <div class="bg-background p-4 rounded-xl shadow-2xl shadow-background flex flex-col items-center animate__animated animate__bounceIn z-40">
+            <img src="../src/img/hadiah.png" class="h-32">
+            <h2 class="text-2xl font-bold mt-4 text-pink-500">Hebat banget sii kamuu..</h2>
+            <p class="mb-4 text-sm align-middle">karena kamu berhasil aku kasih kamu sesuatu..</p>
+            <div class="flex gap-5">
+                <button @click="tidak=true, mau=false" id="Tidak" class="bg-defsec text-white px-4 py-2 rounded hover:bg-deftrd">Tidak</button>
+                <button class="sendEmailButton bg-defsec text-white px-4 py-2 rounded hover:bg-deftrd">Mau</button>
+            </div>
+        </div>
+    </div>
+
+    <div x-show="tidak" class="flex justify-center items-center h-full">
+        <div class="bg-background p-4 rounded-xl shadow-2xl shadow-background flex flex-col items-center animate__animated animate__fadeIn z-40">
+            <img src="../src/img/nanges1.png" class="h-32">
+            <h2 class="text-2xl font-bold mt-4 text-red-500">Kok kamu ga mau gitu sih</h2>
+            <p class="mb-4 text-sm">pokoknya harus mau...</p>
+            <button class="sendEmailButton bg-defsec text-white px-4 py-2 rounded hover:bg-deftrd">Harus Mau...</button>
+        </div>
+    </div>
+
+    <div id="notification" class="flex fixed inset-0 justify-center hidden items-center h-full z-50 bg-black/40">
+        <div class="bg-background p-4 mx-3 lg:w-1/4 rounded-xl shadow-2xl shadow-background flex flex-col items-center animate__animated animate__fadeIn">
+            <img src="../src/img/bawabalon.png" class="h-32">
+            <h2 class="text-2xl font-bold mt-4 text-red-500 text-center">Tunggu besok yaa...</h2>
+            <p class="mb-4 text-sm w-full text-center">Hadiah sedang berada di gudang sortir mertoyudan....</p>
+           <button onclick="window.location.href='pesan.html'" class="bg-defsec text-white px-4 py-2 rounded hover:bg-deftrd">Lanjut</button>
+        </div>
+    </div>
+    
+    <div id="confettiContainer" class="fixed inset-0 pointer-events-none"></div>
+
+
+    <script>
+        const maxConfetti = 70;
+
+        // Warna acak untuk confetti
+        function getRandomColor() {
+            const colors = ['#f87171', '#34d399', '#60a5fa', '#fbbf24', '#a78bfa'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        // Membuat confetti
+        function createConfetti() {
+            const confettiContainer = document.getElementById('confettiContainer');
+            if (confettiContainer.childElementCount >= maxConfetti) return;
+
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.width = Math.random() * 8 + 5 + 'px';
+            confetti.style.height = confetti.style.width;
+            confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+            confetti.style.backgroundColor = getRandomColor();
+
+            confettiContainer.appendChild(confetti);
+            confetti.addEventListener('animationend', () => confetti.remove());
+        }
+
+        setInterval(createConfetti, 50);
+
+        const loadingScreen = document.getElementById("loadingScreen");
+        const notification = document.getElementById("notification");
+        const sendEmailButton = document.querySelectorAll('.sendEmailButton');
+        const fiveHours = 5 * 60 * 60 * 1000; // 5 hours in milliseconds
+
+        // Check if the user can click the button
+        function checkButtonStatus() {
+            const lastClickTime = localStorage.getItem('lastEmailTime');
+            if (lastClickTime) {
+                const currentTime = Date.now();
+                const timeElapsed = currentTime - lastClickTime;
+
+                if (timeElapsed < fiveHours) {
+                    sendEmailButton.disabled = true; // Disable button if 5 hours haven't passed
+                    const timeRemaining = ((fiveHours - timeElapsed) / (60 * 60 * 1000)).toFixed(1);
+                    sendEmailButton.textContent = `Pesan Sudah Terkirim`;
+                    document.getElementById('Tidak').classList.add('hidden');
+                } else {
+                    sendEmailButton.disabled = false;
+                    sendEmailButton.textContent = "Mau";
+                }
+            }
+        }
+
+        // Initial check when the page loads
+        checkButtonStatus();
+
+        // Add event listener for the button click
+        sendEmailButton.forEach(button => {
+                button.addEventListener('click', function() {
+                const lastClickTime = localStorage.getItem('lastEmailTime');
+                const currentTime = Date.now();
+
+                // Check if 5 hours have passed since the last click
+                if (!lastClickTime || currentTime - lastClickTime >= fiveHours) {
+                    loadingScreen.classList.remove("hidden");
+
+                    const templateParams = {
+                        to_name: 'Mas/Mba',
+                        from_name: 'Maulzz',
+                        message: 'Pacar kamu mau hadiah nih',
+                    };
+
+                    emailjs.send('service_0ow902u', 'template_rpjwl4s', templateParams)
+                    .then(function(response) {
+                        console.log('Email berhasil dikirim!', response.status, response.text);
+                        loadingScreen.classList.add('hidden'); 
+                        notification.classList.remove('hidden'); 
+
+                        // Store the current timestamp in localStorage
+                        localStorage.setItem('lastEmailTime', Date.now());
+
+                        // Update button status
+                        checkButtonStatus();
+                    }, function(error) {
+                        console.error('Gagal mengirim. Error:', error);
+                        loadingScreen.classList.add('hidden'); // Hide loading animation
+
+                    });
+                } else {
+                    // Show a message if the button is clicked before 5 hours have passed
+                    alert("Kamu sudah melakukan aksi, mohon tunggu beberapa waktu lagi");
+                }
+            });
+        })
+            
+    </script>
+</body>
+</html>

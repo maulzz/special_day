@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Day For U</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../src/css/output.css">
+    <script src="js/puzzle.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function(){
+           emailjs.init({
+             publicKey: "Auuqi-XbW1Z8I3ZYU",
+           });
+        })();
+     </script>
+</head>
+
+<body x-data="{card:true}" class="flex items-center justify-center min-h-screen bg-def">
+    <!-- notification -->
+    <div id="notification" class="flex fixed inset-0 justify-center hidden items-center h-full z-50 bg-black/40">
+        <div class="bg-background p-4 mx-3 lg:w-1/4 rounded-xl shadow-2xl shadow-background flex flex-col items-center animate__animated animate__fadeIn">
+            <img src="../src/img/lope.png" class="h-32">
+            <h2 class="text-2xl font-bold mt-4 text-red-500 text-center">Pesanmu Sudah Terkirim</h2>
+            <p class="mb-4 text-sm w-full text-center">Maacih yaa julpaa.. Selamat Ulang Tahun...</p>
+           <button id="tutup_notif" class="bg-defsec text-white px-4 py-2 rounded hover:bg-deftrd">OK</button>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50 hidden">
+        <div class="flex flex-col items-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-defsec"></div>
+            <p class="mt-4 text-white text-lg">Mengirim pesan...</p>
+        </div>
+    </div>
+
+    <div x-show="card" class="flex fixed inset-0 justify-center items-center h-full z-20 bg-black/40">
+        <div class="bg-background p-4 mx-3 lg:w-1/4 rounded-xl shadow-2xl shadow-background flex flex-col items-center animate__animated animate__fadeIn">
+            <img src="../src/img/kacamata.png" class="h-32">
+            <h2 class="text-2xl font-bold mt-4 text-red-500 text-center">Maacih yaa dah mau buka</h2>
+            <p class="mb-4 text-sm w-full text-center">Tolong berikan beberapa pesan untuk gweh, tapi harus jujur dari hatie yhaa...</p>
+           <button @click="card=false" class="bg-defsec text-white px-4 py-2 rounded hover:bg-deftrd">Pesan</button>
+        </div>
+    </div>
+
+    <!-- Card Container -->
+    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-md mx-3 flex flex-col items-center">
+        <!-- Card Header -->
+        <h2 class="text-2xl font-semibold text-gray-700 mb-4">Yang jujur yhaa....</h2>
+
+        <!-- Textarea -->
+        <textarea 
+            id="message" 
+            placeholder="Tulis pesanmu di sini..." 
+            class="w-full h-32 p-3 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-defsec"
+        ></textarea>
+
+        <!-- Submit Button -->
+        <button  id="sendButton"  class="bg-defsec mt-4 text-white px-8 py-2 rounded hover:bg-deftrd">Kirim</button>
+    </div>
+
+    <script>
+        const notification = document.getElementById("notification");
+        const tutup_notif = document.getElementById("tutup_notif");
+
+        document.getElementById("sendButton").addEventListener("click", function() {
+        const messageContent = document.getElementById("message").value;
+
+        if (!messageContent.trim()) {
+            alert("Pesan tidak boleh kosong!");
+            return;
+        }
+
+        // Tampilkan loading screen
+        const loadingScreen = document.getElementById("loadingScreen");
+        loadingScreen.classList.remove("hidden");
+
+        // Data untuk EmailJS
+        const templateParams = {
+            message: messageContent, // Pesan dari textarea
+        };
+
+        emailjs.send("service_0ow902u", "template_caelafx", templateParams)
+            .then(function(response) {
+                console.log("SUCCESS!", response.status, response.text);
+                loadingScreen.classList.add("hidden");
+                notification.classList.remove('hidden'); 
+                document.getElementById("message").value = ""; // Kosongkan textarea
+            }, function(error) {
+                console.log("FAILED...", error);
+                loadingScreen.classList.add("hidden");
+            });
+        });
+
+        tutup_notif.addEventListener("click", function() {
+            notification.classList.add('hidden');
+        });
+
+    </script>
+</body>
+</html>

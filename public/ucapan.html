@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Day For U</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../src/css/output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        @keyframes fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .confetti {
+            position: absolute;
+            animation: fall linear forwards;
+        }
+    </style>
+</head>
+<body class="h-screen w-full overflow-hidden bg-def font-body relative flex items-center justify-center">
+
+    <div class="flex flex-col items-center space-y-4 z-50">
+
+        <!-- Foto -->
+        <img id="photo" src="../src/img/foto1.jpg" alt="Foto"
+             class="w-52 h-52 rounded-full hidden animate__animated object-cover shadow-lg" />
+
+        <!-- Ucapan Selamat Ulang Tahun -->
+        <div id="birthdayMessage" class="text-pink-500 text-xl sm:text-xl md:text-2xl lg:text-4xl font-bold text-center px-4"></div>
+
+        <!-- Card -->
+        <div id="card" class="hidden p-4 bg-white/20 rounded-lg shadow-lg text-center animate__animated max-w-[90%] sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto">
+            <p class="text-gray-600">Barakallah Fii Umrik Zulfaa. Selamat ulang tahun yang ke 18, semoga dengan bertambahnya usiamu bertambah juga orang-orang baik yang ada disekitarmu. Semoga apa yang kamu cita-citakan selama ini dapat terwujud, aamiin.</p>
+        </div>
+
+        <!-- Button -->
+        <a href="gallery.html" id="actionButton" class="hidden px-4 py-2 bg-defsec hover:bg-deftrd hover:shadow-lg text-white rounded-lg font-semibold animate__animated">
+            Gallery
+        </a>
+
+    </div>
+    
+    <div id="confettiContainer" class="fixed inset-0 pointer-events-none"></div>
+
+
+    <script>
+        const maxConfetti = 70;
+
+        // Warna acak untuk confetti
+        function getRandomColor() {
+            const colors = ['#f87171', '#34d399', '#60a5fa', '#fbbf24', '#a78bfa'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        // Membuat confetti
+        function createConfetti() {
+            const confettiContainer = document.getElementById('confettiContainer');
+            if (confettiContainer.childElementCount >= maxConfetti) return;
+
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.width = Math.random() * 8 + 5 + 'px';
+            confetti.style.height = confetti.style.width;
+            confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+            confetti.style.backgroundColor = getRandomColor();
+
+            confettiContainer.appendChild(confetti);
+            confetti.addEventListener('animationend', () => confetti.remove());
+        }
+
+        setInterval(createConfetti, 50);
+
+        const message = "Happy Birthday Zulfaa...";
+        const messageContainer = document.getElementById("birthdayMessage");
+
+        // Fungsi untuk menampilkan teks ucapan satu per satu
+        function revealMessage() {
+            messageContainer.innerHTML = ""; // Kosongkan kontainer
+            for (let i = 0; i < message.length; i++) {
+                const span = document.createElement("span");
+                span.classList.add("opacity-0", "inline-block", "transition-all", "duration-500");
+                span.style.transitionDelay = `${i * 0.1}s`;
+                
+                // Jika karakter adalah spasi, tambahkan &nbsp;
+                if (message[i] === " ") {
+                    span.innerHTML = "&nbsp;";
+                } else {
+                    span.innerText = message[i];
+                }
+
+                messageContainer.appendChild(span);
+            }
+
+            setTimeout(() => {
+                document.querySelectorAll("#birthdayMessage span").forEach((span, index) => {
+                    setTimeout(() => {
+                        span.classList.remove("opacity-0");
+                        span.classList.add("opacity-100", "transform", "translate-x-0");
+                    }, index * 100);
+                });
+
+                setTimeout(() => {
+                    const card = document.getElementById("card");
+                    card.classList.remove("hidden");
+                    card.classList.add("animate__fadeInUp");
+
+                    setTimeout(() => {
+                        const photo = document.getElementById("photo");
+                        photo.classList.remove("hidden");
+                        photo.classList.add("animate__fadeInDown");
+
+                        setTimeout(() => {
+                            const actionButton = document.getElementById("actionButton");
+                            actionButton.classList.remove("hidden");
+                            actionButton.classList.add("animate__fadeInUp");
+                        }, 800);
+                    }, 800);
+                }, message.length * 200); 
+            }, 500);
+        }
+        revealMessage();
+
+    </script>
+</body>
+</html>

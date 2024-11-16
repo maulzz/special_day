@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Day For U</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../src/css/output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        .heart {
+            position: absolute;
+            bottom: 100%;
+            font-size: 20px;
+            color: red;
+            opacity: 0.7;
+            animation: fall linear infinite;
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body x-data="{main:true, card:false}" class="h-screen w-full overflow-hidden bg-def font-body relative">
+    <!-- Falling hearts container -->
+    <div id="heartContainer" class="absolute inset-0 pointer-events-none"></div>
+
+    <div x-show="main" class="flex justify-center items-center h-full">
+        <div class="bg-background p-4 rounded-xl shadow-2xl shadow-background flex flex-col items-center animate__animated animate__bounceIn">
+            <img src="../src/img/Chibi_Cat.png" class="h-32">
+            <h2 class="text-2xl font-bold mt-4 text-pink-500">Maacih Sudah Mau Buka</h2>
+            <p class="mb-4 text-sm">Sekarang kamu klik button dibawah ini ya...</p>
+            <button @click="main=false, card=true" class="bg-defsec text-white px-4 py-2 rounded hover:bg-deftrd">yang ini yah</button>
+        </div>
+    </div>
+
+    <div x-show="card" class="flex justify-center items-center h-full">
+        <div class="bg-background p-4 rounded-xl shadow-2xl shadow-background flex flex-col items-center animate__animated animate__fadeIn">
+            <img src="../src/img/nanges.png" class="h-32">
+            <h2 class="text-2xl font-bold mt-4 text-red-500">Aduhh keknya error deh</h2>
+            <p class="mb-4 text-sm">Coba klik ulang...</p>
+            <a href="ucapan.html" class="bg-defsec text-white px-4 py-2 rounded hover:bg-deftrd">yang ini bisa</a>
+        </div>
+    </div>
+
+    <script>
+        const maxHearts = 70; // Batas maksimal jumlah hati
+
+        // Function to generate random colors
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 4; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        // Function to create hearts and animate them
+        function createHeart() {
+            const heartContainer = document.getElementById('heartContainer');
+
+            // Check if the current number of hearts has reached the maximum
+            if (heartContainer.childElementCount >= maxHearts) return;
+
+            const heart = document.createElement('div');
+            heart.innerText = '❤️';
+            heart.classList.add('heart');
+            heart.style.left = Math.random() * 100 + 'vw'; // Random horizontal position
+            heart.style.animationDuration = Math.random() * 3 + 2 + 's'; // Random speed
+            heart.style.color = getRandomColor(); // Random color
+
+            heartContainer.appendChild(heart);
+
+            // Remove heart after it falls
+            heart.addEventListener('animationend', () => {
+                heart.remove();
+            });
+        }
+
+        // Generate a heart every 300ms
+        setInterval(createHeart, 200);
+    </script>
+</body>
+</html>

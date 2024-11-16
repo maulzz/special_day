@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Day For U</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../src/css/output.css">
+    <script src="js/puzzle.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+
+<body x-data="{card:true}" class="flex items-center justify-center min-h-screen bg-def">
+
+    <div x-show="card" class="flex fixed inset-0 justify-center items-center h-full z-20 bg-black/40">
+        <div class="bg-background p-4 rounded-xl shadow-2xl shadow-background flex flex-col items-center animate__animated animate__fadeIn">
+            <img src="../src/img/ancaman.png" class="h-32">
+            <h2 class="text-2xl font-bold mt-4 text-red-500">Kerjain yang bener yah</h2>
+            <p class="mb-4 text-sm">Nanti kalo berhasil ga ku kasi apa-apa, hwhe...</p>
+           <button @click="card=false" class="bg-defsec text-white px-4 py-2 rounded hover:bg-deftrd">Main</button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="flex flex-col items-center">
+        <!-- Title -->
+        <h1 class="h-16 mb-4 font-bold text-3xl">Let's play</h1>
+
+        <!-- Puzzle Board -->
+        <div id="board" class="grid grid-cols-3 gap-1 w-[360px] h-[360px] bg-deftrd border-4 border-defsec">
+        </div>
+
+        <!-- Turn Counter -->
+        <h1 class="text-xl font-bold mt-4 hidden">Turns: <span id="turns">0</span></h1>
+
+        <!-- Notification -->
+        <div id="btnreset" class="hidden mt-4 text-center">
+            <button onclick="resetGame()" class="mt-2 px-4 py-2 bg-defsec text-white rounded hover:bg-deftrd">
+                Main Lagi
+            </button>
+
+            <button id="nextLevelBtn" class="bg-defsec text-white px-4 py-2 rounded hover:bg-deftrd">Lanjut</button>
+        </div>
+    </div>
+
+    <div id="berhasil" class="hidden fixed inset-0 flex justify-center items-center z-20 bg-black/40">
+        <div class="bg-background p-4 rounded-xl shadow-2xl shadow-background flex flex-col items-center animate__animated animate__bounceIn">
+            <img src="../src/img/Chibi_Cat.png" class="h-32">
+            <h2 class="text-2xl font-bold mt-4 text-pink-500">Yeayy Kamu Berhasil</h2>
+            <p class="mb-4 text-sm">Maacih yaa kamu udah mau main gamenya❤️❤️</p>
+            <div class="flex gap-3 items-center ">
+                <button id="btn" class="bg-defsec text-white px-4 py-2 rounded hover:bg-deftrd">Lihat Foto</button>
+                <button id="nextLevelBtn"  onclick="nextLevel()" class="bg-defsec text-white px-4 py-2 rounded hover:bg-deftrd">Lanjut</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('btn').addEventListener('click', function() {
+            document.getElementById('berhasil').classList.add('hidden');
+            document.getElementById('btnreset').classList.remove('hidden');
+        });
+    </script>
+</body>
+
+</html>
