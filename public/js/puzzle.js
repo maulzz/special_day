@@ -37,12 +37,18 @@ function loadPuzzle() {
             tile.id = r.toString() + "-" + c.toString();
             tile.src = "js/level" + level + "/" + imgOrder.shift() + ".png";
 
+            // Event untuk desktop
             tile.addEventListener("dragstart", dragStart);
             tile.addEventListener("dragover", dragOver);
             tile.addEventListener("dragenter", dragEnter);
             tile.addEventListener("dragleave", dragLeave);
             tile.addEventListener("drop", dragDrop);
             tile.addEventListener("dragend", dragEnd);
+
+            // Event untuk mobile
+            tile.addEventListener("touchstart", touchStart);
+            tile.addEventListener("touchmove", touchMove);
+            tile.addEventListener("touchend", touchEnd);
 
             document.getElementById("board").append(tile);
         }
@@ -99,7 +105,7 @@ function resetGame() {
     window.location.reload();
 }
 
-window.onload = function() {
+window.onload = function () {
     loadPuzzle();
     document.getElementById("nextLevelBtn").addEventListener("click", nextLevel);
 };
@@ -128,31 +134,45 @@ function dragEnd() {
         return;
     }
 
-    let currCoords = currTile.id.split("-");
-    let r = parseInt(currCoords[0]);
-    let c = parseInt(currCoords[1]);
+    swapTiles(currTile, otherTile);
+}
 
-    let otherCoords = otherTile.id.split("-");
-    let r2 = parseInt(otherCoords[0]);
-    let c2 = parseInt(otherCoords[1]);
+// Mobile Touch Functions
+function touchStart(e) {
+    currTile = e.target;
+    currTile.dataset.startX = e.touches[0].clientX;
+    currTile.dataset.startY = e.touches[0].clientY;
+}
 
-    let moveLeft = r == r2 && c2 == c - 1;
-    let moveRight = r == r2 && c2 == c + 1;
-    let moveUp = c == c2 && r2 == r - 1;
-    let moveDown = c == c2 && r2 == r + 1;
+function touchMove(e) {
+    e.preventDefault();
+    const moveX = e.touches[0].clientX - currTile.dataset.startX;
+    const moveY = e.touches[0].clientY - currTile.dataset.startY;
 
-    let isAdjacent = moveLeft || moveRight || moveUp || moveDown;
+    currTile.style.transform = `translate(${moveX}px, ${moveY}px)`;
+}
 
-    if (isAdjacent) {
-        let currImg = currTile.src;
-        let otherImg = otherTile.src;
+function touchEnd(e) {
+    const endX = e.changedTouches[0].clientX;
+    const endY = e.changedTouches[0].clientY;
 
-        currTile.src = otherImg;
-        otherTile.src = currImg;
+    currTile.style.transform = ""; // Reset posisi tile
 
-        turns += 1;
-        document.getElementById("turns").innerText = turns;
+    const targetTile = document.elementFromPoint(endX, endY);
 
-        checkPuzzleComplete();
+    if (targetTile && targetTile.tagName === "IMG" && targetTile.src.includes("00.png")) {
+        otherTile = targetTile;
+        swapTiles(currTile, otherTile);
     }
+}
+
+function swapTiles(tile1, tile2) {
+    let tempSrc = tile1.src;
+    tile1.src = tile2.src;
+    tile2.src = tempSrc;
+
+    turns += 1;
+    document.getElementById("turns").innerText = turns;
+
+    checkPuzzleComplete();
 }
