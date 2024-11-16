@@ -26,11 +26,11 @@
         }
     </style>
 </head>
-<body x-data="{main:true, card:false}" class="h-screen w-full overflow-hidden bg-def font-body relative">
+<body x-data="{main:true, card:false}" class="h-screen w-full overflow-hidden bg-def font-body relative flex items-center justify-center">
     <!-- Falling hearts container -->
     <div id="heartContainer" class="absolute inset-0 pointer-events-none"></div>
 
-    <div x-show="main" class="flex overflow-hidden justify-center items-center h-full">
+    <div x-show="main" class="flex justify-center items-center h-full">
         <div class="bg-background p-4 rounded-xl shadow-2xl shadow-background flex flex-col items-center animate__animated animate__bounceIn">
             <img src="../src/img/Chibi_Cat.png" class="h-32">
             <h2 class="text-2xl font-bold mt-4 text-pink-500">Maacih Sudah Mau Buka</h2>
@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <div x-show="card" class="flex overflow-hidden justify-center items-center h-full">
+    <div x-show="card" class="flex justify-center items-center h-full">
         <div class="bg-background p-4 rounded-xl shadow-2xl shadow-background flex flex-col items-center animate__animated animate__fadeIn">
             <img src="../src/img/nanges.png" class="h-32">
             <h2 class="text-2xl font-bold mt-4 text-red-500">Aduhh keknya error deh</h2>
