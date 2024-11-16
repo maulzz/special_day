@@ -1,3 +1,4 @@
+// Konstanta untuk baris dan kolom
 var rows = 3;
 var columns = 3;
 var level = 1;
@@ -110,6 +111,28 @@ window.onload = function () {
     document.getElementById("nextLevelBtn").addEventListener("click", nextLevel);
 };
 
+// Fungsi untuk menukar ubin
+function swapTiles(tile1, tile2) {
+    const [row1, col1] = tile1.id.split("-").map(Number);
+    const [row2, col2] = tile2.id.split("-").map(Number);
+
+    // Validasi: apakah ubin adalah tetangga langsung
+    const isAdjacent =
+        (row1 === row2 && Math.abs(col1 - col2) === 1) || // Sebaris, kolom berdekatan
+        (col1 === col2 && Math.abs(row1 - row2) === 1);   // Sekolom, baris berdekatan
+
+    if (isAdjacent) {
+        let tempSrc = tile1.src;
+        tile1.src = tile2.src;
+        tile2.src = tempSrc;
+
+        turns += 1;
+        document.getElementById("turns").innerText = turns;
+
+        checkPuzzleComplete();
+    }
+}
+
 // Drag and Drop Functions
 function dragStart() {
     currTile = this;
@@ -133,7 +156,6 @@ function dragEnd() {
     if (!otherTile.src.includes("00.png")) {
         return;
     }
-
     swapTiles(currTile, otherTile);
 }
 
@@ -164,15 +186,4 @@ function touchEnd(e) {
         otherTile = targetTile;
         swapTiles(currTile, otherTile);
     }
-}
-
-function swapTiles(tile1, tile2) {
-    let tempSrc = tile1.src;
-    tile1.src = tile2.src;
-    tile2.src = tempSrc;
-
-    turns += 1;
-    document.getElementById("turns").innerText = turns;
-
-    checkPuzzleComplete();
 }
